@@ -1,0 +1,26 @@
+﻿@page
+@model IndianFilmManager.Pages.IndexModel
+@{
+    ViewData["Title"] = "Indian Film Manager";
+}
+
+<div class="container">
+    <!-- Шапка -->
+    <header class="text-center my-4">
+        <h1 class="display-4">Менеджер библиотеки фильмов</h1>
+        <p>Управление базой данных индийских фильмов</p>
+    </header>
+
+    <!-- Навигация -->
+    <div class="row justify-content-center">
+        <div class="col-md-4 text-center">
+            <a href="/Actors" class="btn btn-primary btn-lg w-100 mb-2">Управление актёрами</a>
+        </div>
+        <div class="col-md-4 text-center">
+            <a href="/Genres" class="btn btn-success btn-lg w-100 mb-2">Управление жанрами</a>
+        </div>
+        <div class="col-md-4 text-center">
+            <a href="/Cinemas" class="btn btn-warning btn-lg w-100 mb-2">Управление фильмами</a>
+        </div>
+    </div>
+</div>

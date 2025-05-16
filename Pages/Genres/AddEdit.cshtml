@@ -1,0 +1,20 @@
+﻿@page
+@model IndianFilmManager.Pages.Genres.AddEditModel
+@{
+    ViewData["Title"] = Model.IsEdit ? "Редактировать жанр" : "Добавить жанр";
+}
+
+<div class="container">
+    <header class="text-center my-4">
+        <h1 class="display-6">@ViewData["Title"]</h1>
+    </header>
+
+    <form method="post">
+        <input type="hidden" asp-for="Genre.Id" />
+        <div class="form-group">
+            <label asp-for="Genre.Name"></label>
+            <input asp-for="Genre.Name" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+</div>

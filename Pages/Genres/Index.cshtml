@@ -1,0 +1,43 @@
+﻿@page
+@model IndianFilmManager.Pages.Genres.IndexModel
+@{
+    ViewData["Title"] = "Управление жанрами";
+}
+
+<div class="container">
+    <header class="text-center my-4">
+        <h1 class="display-6">Список жанров</h1>
+    </header>
+
+    <!-- Кнопка добавления -->
+    <div class="mb-4">
+        <a href="/Genres/AddEdit" class="btn btn-success">Добавить жанр</a>
+    </div>
+
+    <!-- Таблица жанров -->
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Название жанра</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var genre in Model.Genres)
+            {
+                <tr>
+                    <td>@genre.Id</td>
+                    <td>@genre.Name</td>
+                    <td>
+                        <a href="/Genres/AddEdit?id=@genre.Id" class="btn btn-sm btn-warning">Редактировать</a>
+                        <form method="post" asp-page-handler="Delete" style="display:inline;">
+                            <input type="hidden" name="id" value="@genre.Id" />
+                            <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

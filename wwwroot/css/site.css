@@ -1,0 +1,90 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Заголовки */
+.display-6 {
+    font-weight: bold;
+    color: #7B68EE; /* Цвет заголовка */
+}
+
+/* Кнопки */
+.btn-success {
+    background-color: #198754;
+    border-color: #198754;
+}
+
+    .btn-success:hover {
+        background-color: #157347;
+        border-color: #157347;
+    }
+
+.btn-warning {
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+
+    .btn-warning:hover {
+        background-color: #e0a800;
+        border-color: #e0a800;
+    }
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+    .btn-danger:hover {
+        background-color: #bb2d3b;
+        border-color: #bb2d3b;
+    }
+
+/* Таблица */
+.table {
+    border-collapse: collapse; /* Убирает двойные границы между ячейками */
+    width: 100%;
+}
+
+    .table thead th {
+        background-color: #7B68EE; /* Цвет фона заголовков */
+        color: white;
+        font-weight: bold;
+        text-align: center;
+        border: 1px solid #dee2e6; /* Границы для заголовков */
+    }
+
+    .table tbody td {
+        vertical-align: middle;
+        text-align: center;
+        border: 1px solid #dee2e6; /* Границы для ячеек */
+    }
+
+    .table tbody tr:nth-child(even) {
+        background-color: #f8f9fa; /* Чередование цветов строк */
+    }

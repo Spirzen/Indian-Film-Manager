@@ -1,0 +1,100 @@
+﻿@page
+@model IndianFilmManager.Pages.Cinemas.AddEditModel
+@{
+    ViewData["Title"] = Model.IsEdit ? "Редактировать фильм" : "Добавить фильм";
+}
+
+<div class="container">
+    <header class="text-center my-4">
+        <h1 class="display-6">@ViewData["Title"]</h1>
+    </header>
+
+    <form method="post">
+        <input type="hidden" asp-for="Cinema.Id" />
+        <div class="form-group">
+            <label asp-for="Cinema.Name"></label>
+            <input asp-for="Cinema.Name" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Cinema.Year"></label>
+            <input asp-for="Cinema.Year" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Cinema.Score"></label>
+            <input asp-for="Cinema.Score" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="actor1">Актёр 1</label>
+            <input type="text" id="actor1" class="form-control" value="@Model.ActorName1" />
+            <input type="hidden" asp-for="Cinema.ActorId1" />
+        </div>
+        <div class="form-group">
+            <label for="actor2">Актёр 2</label>
+            <input type="text" id="actor2" class="form-control" value="@Model.ActorName2" />
+            <input type="hidden" asp-for="Cinema.ActorId2" />
+        </div>
+        <div class="form-group">
+            <label for="actor3">Актёр 3</label>
+            <input type="text" id="actor3" class="form-control" value="@Model.ActorName3" />
+            <input type="hidden" asp-for="Cinema.ActorId3" />
+        </div>
+        <div class="form-group">
+            <label for="actor4">Актёр 4</label>
+            <input type="text" id="actor4" class="form-control" value="@Model.ActorName4" />
+            <input type="hidden" asp-for="Cinema.ActorId4" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Cinema.GenreId1">Жанр 1</label>
+            <select asp-for="Cinema.GenreId1" asp-items="@(new SelectList(Model.Genres, "Id", "Name"))" class="form-control">
+                <option value="">Выберите жанр</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label asp-for="Cinema.GenreId2">Жанр 2</label>
+            <select asp-for="Cinema.GenreId2" asp-items="@(new SelectList(Model.Genres, "Id", "Name"))" class="form-control">
+                <option value="">Выберите жанр</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label asp-for="Cinema.GenreId3">Жанр 3</label>
+            <select asp-for="Cinema.GenreId3" asp-items="@(new SelectList(Model.Genres, "Id", "Name"))" class="form-control">
+                <option value="">Выберите жанр</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+    <script>
+        $(document).ready(function () {
+            function initializeAutocomplete(inputId) {
+                $('#' + inputId).autocomplete({
+                    source: function (request, response) {
+                        $.ajax({
+                            url: '/Actors/Search',
+                            dataType: 'json',
+                            data: { query: request.term },
+                            success: function (data) {
+                                response(data.map(actor => ({
+                                    label: actor.name,
+                                    value: actor.id
+                                })));
+                            }
+                        });
+                    },
+                    minLength: 2,
+                    select: function (event, ui) {
+                        // Отображаем имя актёра
+                        $('#' + inputId).val(ui.item.label);
+                        // Сохраняем ID актёра в скрытом поле
+                        $('input[name="Cinema.' + inputId + '"]').val(ui.item.value);
+                        return false;
+                    }
+                });
+            }
+
+            initializeAutocomplete('actor1');
+            initializeAutocomplete('actor2');
+            initializeAutocomplete('actor3');
+            initializeAutocomplete('actor4');
+        });
+    </script>
+</div>

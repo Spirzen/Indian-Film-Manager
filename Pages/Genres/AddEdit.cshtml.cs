@@ -46,7 +46,6 @@ namespace IndianFilmManager.Pages.Genres
                 {
                     return NotFound();
                 }
-
                 Genre = genre;
                 IsEdit = true;
             }
@@ -55,7 +54,6 @@ namespace IndianFilmManager.Pages.Genres
                 Genre = new GenreViewModel();
                 IsEdit = false;
             }
-
             return Page();
         }
 
@@ -70,19 +68,18 @@ namespace IndianFilmManager.Pages.Genres
                 return Page();
             }
 
-            if (Genre.Id > 0)
+            if (Genre.Id > 0) // Если ID > 0, это редактирование
             {
-                // Если ID > 0, это редактирование
                 var existingGenre = _genreService.GetAllGenres().FirstOrDefault(g => g.Id == Genre.Id);
                 if (existingGenre != null)
                 {
                     existingGenre.Name = Genre.Name;
+
                     _genreService.UpdateGenre(existingGenre);
                 }
             }
-            else
+            else // Если ID == 0, это добавление
             {
-                // Если ID == 0, это добавление
                 _genreService.AddGenre(Genre);
             }
 

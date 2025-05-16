@@ -68,19 +68,18 @@ namespace IndianFilmManager.Pages.Actors
                 return Page();
             }
 
-            if (Actor.Id > 0)
+            if (Actor.Id > 0) // Если ID > 0, это редактирование
             {
-                // Если ID > 0, это редактирование
                 var existingActor = _actorService.GetAllActors().FirstOrDefault(a => a.Id == Actor.Id);
                 if (existingActor != null)
                 {
                     existingActor.Name = Actor.Name;
+
                     _actorService.UpdateActor(existingActor);
                 }
             }
-            else
+            else // Если ID == 0, это добавление
             {
-                // Если ID == 0, это добавление
                 _actorService.AddActor(Actor);
             }
 

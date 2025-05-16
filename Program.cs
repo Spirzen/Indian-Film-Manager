@@ -4,29 +4,21 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-/// <summary>
-/// Добавляет сервисы в контейнер внедрения зависимостей.
-/// </summary>
+// Add services to the container.
 builder.Services.AddRazorPages();
 
-/// <summary>
-/// Регистрирует контекст базы данных с использованием SQLite.
-/// </summary>
+// Register DbContext with SQLite
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-/// <summary>
-/// Регистрирует пользовательские сервисы для работы с актёрами, жанрами и фильмами.
-/// </summary>
+// Register custom services
 builder.Services.AddScoped<ActorService>();
 builder.Services.AddScoped<GenreService>();
 builder.Services.AddScoped<CinemaService>();
 
 var app = builder.Build();
 
-/// <summary>
-/// Настраивает конвейер обработки HTTP-запросов.
-/// </summary>
+// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");

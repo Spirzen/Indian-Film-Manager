@@ -28,7 +28,7 @@ namespace IndianFilmManager.Pages.Genres
         }
 
         /// <summary>
-        /// Обрабатывает GET-запрос для загрузки данных жанров.
+        /// Обрабатывает GET-запрос для отображения списка жанров.
         /// </summary>
         public void OnGet()
         {

@@ -24,24 +24,28 @@
             <input asp-for="Cinema.Score" class="form-control" />
         </div>
         <div class="form-group">
-            <label for="actor1">Актёр 1</label>
-            <input type="text" id="actor1" class="form-control" value="@Model.ActorName1" />
-            <input type="hidden" asp-for="Cinema.ActorId1" />
+            <label asp-for="Cinema.ActorId1">Актёр 1</label>
+            <select asp-for="Cinema.ActorId1" asp-items="@(new SelectList(Model.Actors, "Id", "Name"))" class="form-control">
+                <option value="">Выберите актёра</option>
+            </select>
         </div>
         <div class="form-group">
-            <label for="actor2">Актёр 2</label>
-            <input type="text" id="actor2" class="form-control" value="@Model.ActorName2" />
-            <input type="hidden" asp-for="Cinema.ActorId2" />
+            <label asp-for="Cinema.ActorId2">Актёр 2</label>
+            <select asp-for="Cinema.ActorId2" asp-items="@(new SelectList(Model.Actors, "Id", "Name"))" class="form-control">
+                <option value="">Выберите актёра</option>
+            </select>
         </div>
         <div class="form-group">
-            <label for="actor3">Актёр 3</label>
-            <input type="text" id="actor3" class="form-control" value="@Model.ActorName3" />
-            <input type="hidden" asp-for="Cinema.ActorId3" />
+            <label asp-for="Cinema.ActorId3">Актёр 3</label>
+            <select asp-for="Cinema.ActorId3" asp-items="@(new SelectList(Model.Actors, "Id", "Name"))" class="form-control">
+                <option value="">Выберите актёра</option>
+            </select>
         </div>
         <div class="form-group">
-            <label for="actor4">Актёр 4</label>
-            <input type="text" id="actor4" class="form-control" value="@Model.ActorName4" />
-            <input type="hidden" asp-for="Cinema.ActorId4" />
+            <label asp-for="Cinema.ActorId4">Актёр 4</label>
+            <select asp-for="Cinema.ActorId4" asp-items="@(new SelectList(Model.Actors, "Id", "Name"))" class="form-control">
+                <option value="">Выберите актёра</option>
+            </select>
         </div>
         <div class="form-group">
             <label asp-for="Cinema.GenreId1">Жанр 1</label>
@@ -63,38 +67,4 @@
         </div>
         <button type="submit" class="btn btn-primary">Сохранить</button>
     </form>
-    <script>
-        $(document).ready(function () {
-            function initializeAutocomplete(inputId) {
-                $('#' + inputId).autocomplete({
-                    source: function (request, response) {
-                        $.ajax({
-                            url: '/Actors/Search',
-                            dataType: 'json',
-                            data: { query: request.term },
-                            success: function (data) {
-                                response(data.map(actor => ({
-                                    label: actor.name,
-                                    value: actor.id
-                                })));
-                            }
-                        });
-                    },
-                    minLength: 2,
-                    select: function (event, ui) {
-                        // Отображаем имя актёра
-                        $('#' + inputId).val(ui.item.label);
-                        // Сохраняем ID актёра в скрытом поле
-                        $('input[name="Cinema.' + inputId + '"]').val(ui.item.value);
-                        return false;
-                    }
-                });
-            }
-
-            initializeAutocomplete('actor1');
-            initializeAutocomplete('actor2');
-            initializeAutocomplete('actor3');
-            initializeAutocomplete('actor4');
-        });
-    </script>
 </div>

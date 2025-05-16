@@ -2,7 +2,6 @@ using IndianFilmManager.Models;
 using IndianFilmManager.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using System.Collections.Generic;
 
 namespace IndianFilmManager.Pages.Cinemas
 {
@@ -30,26 +29,6 @@ namespace IndianFilmManager.Pages.Cinemas
         /// Список жанров для выпадающего списка.
         /// </summary>
         public List<GenreViewModel> Genres { get; set; }
-
-        /// <summary>
-        /// Имя первого актёра.
-        /// </summary>
-        public string ActorName1 { get; set; }
-
-        /// <summary>
-        /// Имя второго актёра.
-        /// </summary>
-        public string ActorName2 { get; set; }
-
-        /// <summary>
-        /// Имя третьего актёра.
-        /// </summary>
-        public string ActorName3 { get; set; }
-
-        /// <summary>
-        /// Имя четвёртого актёра.
-        /// </summary>
-        public string ActorName4 { get; set; }
 
         /// <summary>
         /// Флаг, указывающий, является ли операция редактированием.
@@ -86,21 +65,14 @@ namespace IndianFilmManager.Pages.Cinemas
                 {
                     return NotFound();
                 }
-
                 Cinema = cinema;
                 IsEdit = true;
-
-                ActorName1 = _actorService.GetAllActors().FirstOrDefault(a => a.Id == cinema.ActorId1)?.Name;
-                ActorName2 = _actorService.GetAllActors().FirstOrDefault(a => a.Id == cinema.ActorId2)?.Name;
-                ActorName3 = _actorService.GetAllActors().FirstOrDefault(a => a.Id == cinema.ActorId3)?.Name;
-                ActorName4 = _actorService.GetAllActors().FirstOrDefault(a => a.Id == cinema.ActorId4)?.Name;
             }
             else
             {
                 Cinema = new CinemaViewModel();
                 IsEdit = false;
             }
-
             return Page();
         }
 
@@ -112,15 +84,13 @@ namespace IndianFilmManager.Pages.Cinemas
         {
             if (!ModelState.IsValid)
             {
-                // Если модель недействительна, загружаем списки актёров и жанров заново
                 Actors = _actorService.GetAllActors();
                 Genres = _genreService.GetAllGenres();
                 return Page();
             }
 
-            if (Cinema.Id > 0)
+            if (Cinema.Id > 0) // Если ID > 0, это редактирование
             {
-                // Если ID > 0, это редактирование
                 var existingCinema = _cinemaService.GetAllCinemas().FirstOrDefault(c => c.Id == Cinema.Id);
                 if (existingCinema != null)
                 {
@@ -138,13 +108,11 @@ namespace IndianFilmManager.Pages.Cinemas
                     _cinemaService.UpdateCinema(existingCinema);
                 }
             }
-            else
+            else // Если ID == 0, это добавление
             {
-                // Если ID == 0, это добавление
                 _cinemaService.AddCinema(Cinema);
             }
 
-            // Перенаправляем на страницу списка фильмов
             return RedirectToPage("/Cinemas/Index");
         }
     }

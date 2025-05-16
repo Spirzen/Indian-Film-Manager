@@ -13,19 +13,11 @@ namespace IndianFilmManager.Services
     {
         private readonly ApplicationDbContext _context;
 
-        /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="ActorService"/>.
-        /// </summary>
-        /// <param name="context">Контекст базы данных.</param>
         public ActorService(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        /// <summary>
-        /// Получает список всех актёров.
-        /// </summary>
-        /// <returns>Список моделей представления актёров.</returns>
         public List<ActorViewModel> GetAllActors()
         {
             return _context.Actors
@@ -37,10 +29,6 @@ namespace IndianFilmManager.Services
                 .ToList();
         }
 
-        /// <summary>
-        /// Добавляет нового актёра в базу данных.
-        /// </summary>
-        /// <param name="actor">Модель представления актёра для добавления.</param>
         public void AddActor(ActorViewModel actor)
         {
             var newActor = new Actor { Name = actor.Name };
@@ -48,10 +36,6 @@ namespace IndianFilmManager.Services
             _context.SaveChanges();
         }
 
-        /// <summary>
-        /// Обновляет данные существующего актёра.
-        /// </summary>
-        /// <param name="actor">Модель представления актёра для обновления.</param>
         public void UpdateActor(ActorViewModel actor)
         {
             var existingActor = _context.Actors.Find(actor.Id);
@@ -62,10 +46,6 @@ namespace IndianFilmManager.Services
             }
         }
 
-        /// <summary>
-        /// Удаляет актёра из базы данных по его идентификатору.
-        /// </summary>
-        /// <param name="id">Идентификатор актёра для удаления.</param>
         public void DeleteActor(int id)
         {
             var actor = _context.Actors.Find(id);

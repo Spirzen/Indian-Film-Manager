@@ -1,43 +1,58 @@
 ﻿@page
 @model IndianFilmManager.Pages.Actors.IndexModel
 @{
-    ViewData["Title"] = "Управление актёрами";
+    ViewData["Title"] = "Актёры";
 }
 
-<div class="container">
-    <header class="text-center my-4">
-        <h1 class="display-6">Список актёров</h1>
-    </header>
-
-    <!-- Кнопка добавления -->
-    <div class="mb-4">
-        <a href="/Actors/AddEdit" class="btn btn-success">Добавить актёра</a>
-    </div>
-
-    <!-- Таблица актёров -->
-    <table class="table table-bordered table-hover">
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Имя актёра</th>
-                <th>Действия</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var actor in Model.Actors)
-            {
-                <tr>
-                    <td>@actor.Id</td>
-                    <td>@actor.Name</td>
-                    <td>
-                        <a href="/Actors/AddEdit?id=@actor.Id" class="btn btn-sm btn-warning">Редактировать</a>
-                        <form method="post" asp-page-handler="Delete" style="display:inline;">
-                            <input type="hidden" name="id" value="@actor.Id" />
-                            <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
-                        </form>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<div class="ifm-page-header">
+    <h1><i class="bi bi-person-stars"></i> Актёры</h1>
+    <p class="subtitle">Звёзды индийского кино</p>
 </div>
+
+<div class="ifm-toolbar">
+    <span class="text-muted">Всего: @Model.Actors.Count</span>
+    <a asp-page="/Actors/AddEdit" class="btn btn-ifm-primary">
+        <i class="bi bi-plus-lg"></i> Добавить актёра
+    </a>
+</div>
+
+@if (!Model.Actors.Any())
+{
+    <div class="ifm-empty">
+        <div class="icon">⭐</div>
+        <p>Список актёров пуст</p>
+        <a asp-page="/Actors/AddEdit" class="btn btn-ifm-primary mt-2">Добавить актёра</a>
+    </div>
+}
+else
+{
+    <div class="ifm-table-wrap">
+        <table class="ifm-table">
+            <thead>
+                <tr>
+                    <th>Имя</th>
+                    <th style="width: 200px;">Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var actor in Model.Actors)
+                {
+                    <tr>
+                        <td><strong>@actor.Name</strong></td>
+                        <td>
+                            <a asp-page="/Actors/AddEdit" asp-route-id="@actor.Id" class="btn btn-sm btn-ifm-warning">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <form method="post" asp-page-handler="Delete" class="d-inline" data-confirm-delete>
+                                <input type="hidden" name="id" value="@actor.Id" />
+                                <button type="submit" class="btn btn-sm btn-ifm-danger">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

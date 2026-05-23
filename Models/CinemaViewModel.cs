@@ -49,5 +49,15 @@
         /// Оценка.
         /// </summary>
         public int Score { get; set; }
+
+        /// <summary>
+        /// Имена актёров для отображения.
+        /// </summary>
+        public string ActorsDisplay { get; set; } = "";
+
+        /// <summary>
+        /// Названия жанров для отображения.
+        /// </summary>
+        public string GenresDisplay { get; set; } = "";
     }
 }

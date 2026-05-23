@@ -1,26 +1,70 @@
 ﻿@page
 @model IndianFilmManager.Pages.IndexModel
 @{
-    ViewData["Title"] = "Indian Film Manager";
+    ViewData["Title"] = "Главная";
+    var d = Model.Dashboard;
 }
 
-<div class="container">
-    <!-- Шапка -->
-    <header class="text-center my-4">
-        <h1 class="display-4">Indian Film Manager</h1>
-        <p>Управление базой данных индийских фильмов</p>
-    </header>
+<section class="ifm-hero">
+    <h1>Indian Film Manager</h1>
+    <p>Каталог болливудского кино — фильмы, актёры и жанры в одном месте</p>
+</section>
 
-    <!-- Навигация -->
-    <div class="row justify-content-center">
-        <div class="col-md-4 text-center">
-            <a href="/Actors" class="btn btn-primary btn-lg w-100 mb-2">Управление актёрами</a>
+<div class="ifm-stat-grid">
+    <div class="ifm-stat-card">
+        <div class="stat-value">@d.CinemaCount</div>
+        <div class="stat-label">Фильмов</div>
+    </div>
+    <div class="ifm-stat-card">
+        <div class="stat-value">@d.ActorCount</div>
+        <div class="stat-label">Актёров</div>
+    </div>
+    <div class="ifm-stat-card">
+        <div class="stat-value">@d.GenreCount</div>
+        <div class="stat-label">Жанров</div>
+    </div>
+    <div class="ifm-stat-card">
+        <div class="stat-value">@(d.CinemaCount > 0 ? d.AverageScore.ToString("0.0") : "—")</div>
+        <div class="stat-label">Средний рейтинг</div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-7">
+        <h2 class="h5 mb-3" style="color: var(--ifm-gold);">Быстрый доступ</h2>
+        <div class="ifm-action-grid">
+            <a asp-page="/Cinemas/Index" class="ifm-action-card">
+                <div class="icon">🎞️</div>
+                <h3>Фильмы</h3>
+                <p>Каталог, поиск и рейтинги</p>
+            </a>
+            <a asp-page="/Actors/Index" class="ifm-action-card">
+                <div class="icon">⭐</div>
+                <h3>Актёры</h3>
+                <p>Звёзды индийского кино</p>
+            </a>
+            <a asp-page="/Genres/Index" class="ifm-action-card">
+                <div class="icon">🎭</div>
+                <h3>Жанры</h3>
+                <p>Драма, экшен, мелодрама…</p>
+            </a>
         </div>
-        <div class="col-md-4 text-center">
-            <a href="/Genres" class="btn btn-success btn-lg w-100 mb-2">Управление жанрами</a>
-        </div>
-        <div class="col-md-4 text-center">
-            <a href="/Cinemas" class="btn btn-warning btn-lg w-100 mb-2">Управление фильмами</a>
-        </div>
+    </div>
+    <div class="col-lg-5">
+        @if (d.TopCinemas.Any())
+        {
+            <div class="ifm-top-list">
+                <h2><i class="bi bi-trophy"></i> Топ по рейтингу</h2>
+                <ol>
+                    @foreach (var film in d.TopCinemas)
+                    {
+                        <li>
+                            <strong>@film.Name</strong>
+                            <div class="film-meta">@film.Year · рейтинг @film.Score/10</div>
+                        </li>
+                    }
+                </ol>
+            </div>
+        }
     </div>
 </div>

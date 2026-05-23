@@ -1,35 +1,97 @@
 ﻿using IndianFilmManager.Data;
 using IndianFilmManager.Data.Models;
 using IndianFilmManager.Models;
-using System.Collections.Generic;
-using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace IndianFilmManager.Services
 {
-    /// <summary>
-    /// Сервис для работы с фильмами.
-    /// </summary>
     public class CinemaService
     {
         private readonly ApplicationDbContext _context;
 
-        /// <summary>
-        /// Инициализирует новый экземпляр класса <see cref="CinemaService"/>.
-        /// </summary>
-        /// <param name="context">Контекст базы данных.</param>
         public CinemaService(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        /// <summary>
-        /// Получает список всех фильмов из базы данных.
-        /// </summary>
-        /// <returns>Список фильмов в виде модели представления.</returns>
-        public List<CinemaViewModel> GetAllCinemas()
+        public List<CinemaViewModel> GetAllCinemas(string? search = null)
         {
-            return _context.Cinemas
-                .Select(c => new CinemaViewModel
+            var query = _context.Cinemas.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var term = search.Trim();
+                query = query.Where(c => c.Name.Contains(term));
+            }
+
+            var cinemas = query.OrderByDescending(c => c.Score).ThenByDescending(c => c.Year).ToList();
+            return MapCinemas(cinemas);
+        }
+
+        public List<CinemaViewModel> GetTopCinemas(int count = 5)
+        {
+            var cinemas = _context.Cinemas
+                .OrderByDescending(c => c.Score)
+                .ThenByDescending(c => c.Year)
+                .Take(count)
+                .ToList();
+
+            return MapCinemas(cinemas);
+        }
+
+        public CinemaViewModel? GetCinemaById(int id)
+        {
+            var cinema = _context.Cinemas.Find(id);
+            return cinema == null ? null : MapCinemas(new List<Cinema> { cinema }).First();
+        }
+
+        public void AddCinema(CinemaViewModel cinema)
+        {
+            _context.Cinemas.Add(MapToEntity(cinema));
+            _context.SaveChanges();
+        }
+
+        public void UpdateCinema(CinemaViewModel cinema)
+        {
+            var existing = _context.Cinemas.Find(cinema.Id);
+            if (existing == null) return;
+
+            existing.Name = cinema.Name;
+            existing.Year = cinema.Year;
+            existing.ActorId1 = cinema.ActorId1;
+            existing.ActorId2 = cinema.ActorId2;
+            existing.ActorId3 = cinema.ActorId3;
+            existing.ActorId4 = cinema.ActorId4;
+            existing.GenreId1 = cinema.GenreId1;
+            existing.GenreId2 = cinema.GenreId2;
+            existing.GenreId3 = cinema.GenreId3;
+            existing.Score = cinema.Score;
+            _context.SaveChanges();
+        }
+
+        public void DeleteCinema(int id)
+        {
+            var cinema = _context.Cinemas.Find(id);
+            if (cinema == null) return;
+
+            _context.Cinemas.Remove(cinema);
+            _context.SaveChanges();
+        }
+
+        public double GetAverageScore()
+        {
+            if (!_context.Cinemas.Any()) return 0;
+            return Math.Round(_context.Cinemas.Average(c => c.Score), 1);
+        }
+
+        private List<CinemaViewModel> MapCinemas(List<Cinema> cinemas)
+        {
+            var actors = _context.Actors.AsNoTracking().ToDictionary(a => a.Id, a => a.Name);
+            var genres = _context.Genres.AsNoTracking().ToDictionary(g => g.Id, g => g.Name);
+
+            return cinemas.Select(c =>
+            {
+                var vm = new CinemaViewModel
                 {
                     Id = c.Id,
                     Name = c.Name,
@@ -42,68 +104,37 @@ namespace IndianFilmManager.Services
                     GenreId2 = c.GenreId2,
                     GenreId3 = c.GenreId3,
                     Score = c.Score
-                })
+                };
+
+                vm.ActorsDisplay = FormatNames(actors, c.ActorId1, c.ActorId2, c.ActorId3, c.ActorId4);
+                vm.GenresDisplay = FormatNames(genres, c.GenreId1, c.GenreId2, c.GenreId3);
+                return vm;
+            }).ToList();
+        }
+
+        private static string FormatNames(Dictionary<int, string> lookup, params int?[] ids)
+        {
+            var names = ids
+                .Where(id => id.HasValue && lookup.ContainsKey(id.Value))
+                .Select(id => lookup[id!.Value])
+                .Distinct()
                 .ToList();
+
+            return names.Count > 0 ? string.Join(", ", names) : "—";
         }
 
-        /// <summary>
-        /// Добавляет новый фильм в базу данных.
-        /// </summary>
-        /// <param name="cinema">Модель представления нового фильма.</param>
-        public void AddCinema(CinemaViewModel cinema)
+        private static Cinema MapToEntity(CinemaViewModel cinema) => new()
         {
-            var newCinema = new Cinema
-            {
-                Name = cinema.Name,
-                Year = cinema.Year,
-                ActorId1 = cinema.ActorId1,
-                ActorId2 = cinema.ActorId2,
-                ActorId3 = cinema.ActorId3,
-                ActorId4 = cinema.ActorId4,
-                GenreId1 = cinema.GenreId1,
-                GenreId2 = cinema.GenreId2,
-                GenreId3 = cinema.GenreId3,
-                Score = cinema.Score
-            };
-            _context.Cinemas.Add(newCinema);
-            _context.SaveChanges();
-        }
-
-        /// <summary>
-        /// Обновляет данные существующего фильма в базе данных.
-        /// </summary>
-        /// <param name="cinema">Модель представления обновляемого фильма.</param>
-        public void UpdateCinema(CinemaViewModel cinema)
-        {
-            var existingCinema = _context.Cinemas.Find(cinema.Id);
-            if (existingCinema != null)
-            {
-                existingCinema.Name = cinema.Name;
-                existingCinema.Year = cinema.Year;
-                existingCinema.ActorId1 = cinema.ActorId1;
-                existingCinema.ActorId2 = cinema.ActorId2;
-                existingCinema.ActorId3 = cinema.ActorId3;
-                existingCinema.ActorId4 = cinema.ActorId4;
-                existingCinema.GenreId1 = cinema.GenreId1;
-                existingCinema.GenreId2 = cinema.GenreId2;
-                existingCinema.GenreId3 = cinema.GenreId3;
-                existingCinema.Score = cinema.Score;
-                _context.SaveChanges();
-            }
-        }
-
-        /// <summary>
-        /// Удаляет фильм из базы данных по его идентификатору.
-        /// </summary>
-        /// <param name="id">Идентификатор фильма для удаления.</param>
-        public void DeleteCinema(int id)
-        {
-            var cinema = _context.Cinemas.Find(id);
-            if (cinema != null)
-            {
-                _context.Cinemas.Remove(cinema);
-                _context.SaveChanges();
-            }
-        }
+            Name = cinema.Name,
+            Year = cinema.Year,
+            ActorId1 = cinema.ActorId1,
+            ActorId2 = cinema.ActorId2,
+            ActorId3 = cinema.ActorId3,
+            ActorId4 = cinema.ActorId4,
+            GenreId1 = cinema.GenreId1,
+            GenreId2 = cinema.GenreId2,
+            GenreId3 = cinema.GenreId3,
+            Score = cinema.Score
+        };
     }
 }

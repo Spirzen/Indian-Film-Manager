@@ -4,67 +4,79 @@
     ViewData["Title"] = Model.IsEdit ? "Редактировать фильм" : "Добавить фильм";
 }
 
-<div class="container">
-    <header class="text-center my-4">
-        <h1 class="display-6">@ViewData["Title"]</h1>
-    </header>
+<div class="ifm-page-header">
+    <h1>@ViewData["Title"]</h1>
+    <p class="subtitle">
+        <a asp-page="/Cinemas/Index"><i class="bi bi-arrow-left"></i> Назад к каталогу</a>
+    </p>
+</div>
 
+<div class="ifm-form-card">
     <form method="post">
         <input type="hidden" asp-for="Cinema.Id" />
-        <div class="form-group">
-            <label asp-for="Cinema.Name"></label>
-            <input asp-for="Cinema.Name" class="form-control" />
+        <div class="mb-3">
+            <label asp-for="Cinema.Name" class="form-label">Название</label>
+            <input asp-for="Cinema.Name" class="form-control" required maxlength="100" />
         </div>
-        <div class="form-group">
-            <label asp-for="Cinema.Year"></label>
-            <input asp-for="Cinema.Year" class="form-control" />
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="Cinema.Year" class="form-label">Год выпуска</label>
+                <input asp-for="Cinema.Year" class="form-control" type="number" min="1900" max="2100" />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label asp-for="Cinema.Score" class="form-label">Рейтинг (1–10)</label>
+                <input asp-for="Cinema.Score" class="form-control" type="number" min="1" max="10" />
+            </div>
         </div>
-        <div class="form-group">
-            <label asp-for="Cinema.Score"></label>
-            <input asp-for="Cinema.Score" class="form-control" />
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label asp-for="Cinema.ActorId1" class="form-label">Актёр 1</label>
+                <select asp-for="Cinema.ActorId1" asp-items="@(new SelectList(Model.Actors, "Id", "Name"))" class="form-select">
+                    <option value="">—</option>
+                </select>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label asp-for="Cinema.ActorId2" class="form-label">Актёр 2</label>
+                <select asp-for="Cinema.ActorId2" asp-items="@(new SelectList(Model.Actors, "Id", "Name"))" class="form-select">
+                    <option value="">—</option>
+                </select>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label asp-for="Cinema.ActorId3" class="form-label">Актёр 3</label>
+                <select asp-for="Cinema.ActorId3" asp-items="@(new SelectList(Model.Actors, "Id", "Name"))" class="form-select">
+                    <option value="">—</option>
+                </select>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label asp-for="Cinema.ActorId4" class="form-label">Актёр 4</label>
+                <select asp-for="Cinema.ActorId4" asp-items="@(new SelectList(Model.Actors, "Id", "Name"))" class="form-select">
+                    <option value="">—</option>
+                </select>
+            </div>
         </div>
-        <div class="form-group">
-            <label asp-for="Cinema.ActorId1">Актёр 1</label>
-            <select asp-for="Cinema.ActorId1" asp-items="@(new SelectList(Model.Actors, "Id", "Name"))" class="form-control">
-                <option value="">Выберите актёра</option>
-            </select>
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label asp-for="Cinema.GenreId1" class="form-label">Жанр 1</label>
+                <select asp-for="Cinema.GenreId1" asp-items="@(new SelectList(Model.Genres, "Id", "Name"))" class="form-select">
+                    <option value="">—</option>
+                </select>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label asp-for="Cinema.GenreId2" class="form-label">Жанр 2</label>
+                <select asp-for="Cinema.GenreId2" asp-items="@(new SelectList(Model.Genres, "Id", "Name"))" class="form-select">
+                    <option value="">—</option>
+                </select>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label asp-for="Cinema.GenreId3" class="form-label">Жанр 3</label>
+                <select asp-for="Cinema.GenreId3" asp-items="@(new SelectList(Model.Genres, "Id", "Name"))" class="form-select">
+                    <option value="">—</option>
+                </select>
+            </div>
         </div>
-        <div class="form-group">
-            <label asp-for="Cinema.ActorId2">Актёр 2</label>
-            <select asp-for="Cinema.ActorId2" asp-items="@(new SelectList(Model.Actors, "Id", "Name"))" class="form-control">
-                <option value="">Выберите актёра</option>
-            </select>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-ifm-primary">Сохранить</button>
+            <a asp-page="/Cinemas/Index" class="btn btn-ifm-outline">Отмена</a>
         </div>
-        <div class="form-group">
-            <label asp-for="Cinema.ActorId3">Актёр 3</label>
-            <select asp-for="Cinema.ActorId3" asp-items="@(new SelectList(Model.Actors, "Id", "Name"))" class="form-control">
-                <option value="">Выберите актёра</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label asp-for="Cinema.ActorId4">Актёр 4</label>
-            <select asp-for="Cinema.ActorId4" asp-items="@(new SelectList(Model.Actors, "Id", "Name"))" class="form-control">
-                <option value="">Выберите актёра</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label asp-for="Cinema.GenreId1">Жанр 1</label>
-            <select asp-for="Cinema.GenreId1" asp-items="@(new SelectList(Model.Genres, "Id", "Name"))" class="form-control">
-                <option value="">Выберите жанр</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label asp-for="Cinema.GenreId2">Жанр 2</label>
-            <select asp-for="Cinema.GenreId2" asp-items="@(new SelectList(Model.Genres, "Id", "Name"))" class="form-control">
-                <option value="">Выберите жанр</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label asp-for="Cinema.GenreId3">Жанр 3</label>
-            <select asp-for="Cinema.GenreId3" asp-items="@(new SelectList(Model.Genres, "Id", "Name"))" class="form-control">
-                <option value="">Выберите жанр</option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Сохранить</button>
     </form>
 </div>

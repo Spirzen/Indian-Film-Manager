@@ -1,47 +1,66 @@
 ﻿@page
 @model IndianFilmManager.Pages.Cinemas.IndexModel
 @{
-    ViewData["Title"] = "Управление фильмами";
+    ViewData["Title"] = "Фильмы";
 }
 
-<div class="container">
-    <header class="text-center my-4">
-        <h1 class="display-6">Список фильмов</h1>
-    </header>
-
-    <!-- Кнопка добавления -->
-    <div class="mb-4">
-        <a href="/Cinemas/AddEdit" class="btn btn-success">Добавить фильм</a>
-    </div>
-
-    <!-- Таблица фильмов -->
-    <table class="table table-bordered table-hover">
-        <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Название фильма</th>
-                <th>Год выпуска</th>
-                <th>Рейтинг</th>
-                <th>Действия</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var cinema in Model.Cinemas)
-            {
-                <tr>
-                    <td>@cinema.Id</td>
-                    <td>@cinema.Name</td>
-                    <td>@cinema.Year</td>
-                    <td>@cinema.Score</td>
-                    <td>
-                        <a href="/Cinemas/AddEdit?id=@cinema.Id" class="btn btn-sm btn-warning">Редактировать</a>
-                        <form method="post" asp-page-handler="Delete" style="display:inline;">
-                            <input type="hidden" name="id" value="@cinema.Id" />
-                            <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
-                        </form>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<div class="ifm-page-header">
+    <h1><i class="bi bi-collection-play"></i> Каталог фильмов</h1>
+    <p class="subtitle">Поиск, рейтинги, актёры и жанры</p>
 </div>
+
+<div class="ifm-toolbar">
+    <form method="get" class="ifm-search mb-0" style="flex: 1; max-width: 480px;">
+        <input type="search" name="search" value="@Model.Search" placeholder="Название фильма…" />
+        <button type="submit" class="btn btn-ifm-primary">Найти</button>
+        @if (!string.IsNullOrWhiteSpace(Model.Search))
+        {
+            <a asp-page="/Cinemas/Index" class="btn btn-ifm-outline">Сбросить</a>
+        }
+    </form>
+    <a asp-page="/Cinemas/AddEdit" class="btn btn-ifm-primary">
+        <i class="bi bi-plus-lg"></i> Добавить фильм
+    </a>
+</div>
+
+@if (!Model.Cinemas.Any())
+{
+    <div class="ifm-empty">
+        <div class="icon">🎬</div>
+        <p>@(string.IsNullOrWhiteSpace(Model.Search) ? "Пока нет фильмов. Добавьте первый!" : "Ничего не найдено по запросу.")</p>
+        @if (string.IsNullOrWhiteSpace(Model.Search))
+        {
+            <a asp-page="/Cinemas/AddEdit" class="btn btn-ifm-primary mt-2">Добавить фильм</a>
+        }
+    </div>
+}
+else
+{
+    <div class="ifm-film-grid">
+        @foreach (var cinema in Model.Cinemas)
+        {
+            <article class="ifm-film-card">
+                <h3>@cinema.Name</h3>
+                <span class="year">@cinema.Year</span>
+                <div class="mt-2">
+                    <partial name="_CinemaScore" model="cinema.Score" />
+                </div>
+                <div class="meta">
+                    <div><strong>Актёры:</strong> @cinema.ActorsDisplay</div>
+                    <div class="mt-1"><strong>Жанры:</strong> @cinema.GenresDisplay</div>
+                </div>
+                <div class="actions">
+                    <a asp-page="/Cinemas/AddEdit" asp-route-id="@cinema.Id" class="btn btn-sm btn-ifm-warning">
+                        <i class="bi bi-pencil"></i> Изменить
+                    </a>
+                    <form method="post" asp-page-handler="Delete" class="d-inline" data-confirm-delete>
+                        <input type="hidden" name="id" value="@cinema.Id" />
+                        <button type="submit" class="btn btn-sm btn-ifm-danger">
+                            <i class="bi bi-trash"></i> Удалить
+                        </button>
+                    </form>
+                </div>
+            </article>
+        }
+    </div>
+}

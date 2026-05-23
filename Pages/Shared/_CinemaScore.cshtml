@@ -1,0 +1,9 @@
+@model int
+
+<div class="ifm-score" title="Рейтинг: @Model / 10">
+    @for (var i = 1; i <= 10; i++)
+    {
+        <span class="star @(i <= Model ? "" : "empty")">★</span>
+    }
+    <span class="score-num">@Model/10</span>
+</div>

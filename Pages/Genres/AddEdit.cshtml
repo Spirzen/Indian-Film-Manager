@@ -4,17 +4,23 @@
     ViewData["Title"] = Model.IsEdit ? "Редактировать жанр" : "Добавить жанр";
 }
 
-<div class="container">
-    <header class="text-center my-4">
-        <h1 class="display-6">@ViewData["Title"]</h1>
-    </header>
+<div class="ifm-page-header">
+    <h1>@ViewData["Title"]</h1>
+    <p class="subtitle">
+        <a asp-page="/Genres/Index"><i class="bi bi-arrow-left"></i> Назад к списку</a>
+    </p>
+</div>
 
+<div class="ifm-form-card">
     <form method="post">
         <input type="hidden" asp-for="Genre.Id" />
-        <div class="form-group">
-            <label asp-for="Genre.Name"></label>
-            <input asp-for="Genre.Name" class="form-control" />
+        <div class="mb-3">
+            <label asp-for="Genre.Name" class="form-label">Название жанра</label>
+            <input asp-for="Genre.Name" class="form-control" required maxlength="100" />
         </div>
-        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-ifm-primary">Сохранить</button>
+            <a asp-page="/Genres/Index" class="btn btn-ifm-outline">Отмена</a>
+        </div>
     </form>
 </div>
